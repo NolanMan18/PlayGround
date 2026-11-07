@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23d6e5ad'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='43' font-weight='800' fill='%23304538'%3EE%3C/text%3E%3C/svg%3E" />
   <link rel="stylesheet" href="style.css" />
   <script type="importmap">
     {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js"}}
@@ -27,7 +28,7 @@
     <div class="toast" id="toast"></div>
     <div class="touch-controls" id="touchControls">
       <div class="stick-zone" id="stickZone"><div class="stick-knob" id="stickKnob"></div></div>
-      <div class="touch-actions"><button id="rotateBtn" class="round-action">↻<small>ROTATE</small></button><button id="placeBtn" class="place-action">＋<small>PLACE</small></button></div>
+      <div class="touch-actions"><button id="rotateBtn" class="round-action" aria-label="Rotate selected item" title="Rotate selected item">↻<small>ROTATE</small></button><button id="placeBtn" class="place-action" aria-label="Place selected item" title="Place selected item">＋<small>PLACE</small></button><button id="eraseBtn" class="erase-action" aria-label="Remove item at the crosshair" title="Remove item at the crosshair">⌫<small>ERASE</small></button></div>
     </div>
     <aside class="inventory" id="inventory">
       <div class="inventory-head"><div><div class="eyebrow">YOUR WORKSHOP</div><h2>Inventory <span id="itemCount">—</span></h2></div><button id="closeInventory" class="close-btn">×</button></div>
@@ -40,7 +41,7 @@
     <button class="inventory-toggle" id="inventoryToggle"><span>▦</span><b>INVENTORY</b><small>ALL MATERIALS</small><kbd>B</kbd></button>
     <div class="selected-chip" id="selectedChip"><span class="chip-swatch"></span><div><small>READY TO PLACE</small><b id="chipName">Oak wall</b></div><button id="chipRotate">↻</button></div>
     <div class="controls-hint"><span>WASD</span> MOVE <i></i><span>DRAG</span> LOOK <i></i><span>CLICK</span> PLACE <i></i><span>CTRL+Z</span> UNDO</div>
-    <div class="help-modal" id="helpModal"><div class="help-panel"><button class="close-btn" id="closeHelp">×</button><div class="eyebrow">QUICK START</div><h2>Build your own<br><em>little corner.</em></h2><p>Choose any material from your unlimited inventory, then click or tap the landscape to place it. Walk around with <b>W A S D</b> or the touch pad, and drag the world to look around. Rotate with <b>R</b>, undo with <b>Ctrl+Z</b> or ↶, and right-click a placed piece to remove it. Your creations save on this device.</p><div class="help-tip"><span>✦</span><div><b>Little tip</b><small>Use the category filters to find every wood, stone, color, and light. Your builds stay saved on this device.</small></div></div><button class="primary-btn" id="gotIt">LET'S BUILD &nbsp;→</button></div></div>
+    <div class="help-modal" id="helpModal"><div class="help-panel"><button class="close-btn" id="closeHelp">×</button><div class="eyebrow">QUICK START</div><h2>Build your own<br><em>little corner.</em></h2><p>Choose any material from your unlimited inventory, then click or tap the landscape to place it. Walk around with <b>W A S D</b> or the touch pad, and drag the world to look around. Rotate with <b>R</b>, undo with <b>Ctrl+Z</b> or ↶, and remove placed pieces with right-click or the touch erase button while aiming at them. Your creations save on this device.</p><div class="help-tip"><span>✦</span><div><b>Little tip</b><small>Use the category filters to find every wood, stone, color, and light. Your builds stay saved on this device.</small></div></div><button class="primary-btn" id="gotIt">LET'S BUILD &nbsp;→</button></div></div>
     <div class="loading-cover" id="loadingCover"><div class="loader-mark">E</div><div class="loading-title">EVERGREEN</div><div class="loading-sub">A little world is taking shape...</div><div class="loading-bar"><i></i></div></div>
   </main>
   <script type="module" src="game.js"></script>
