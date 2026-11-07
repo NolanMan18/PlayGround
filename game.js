@@ -103,9 +103,23 @@ function makePlaceable(item,pos,angle=0){const group=new THREE.Group();group.pos
  const pad=type==='thinSlab'||type==='patternSlab'||type==='ledPlate'?0:.05;group.position.y+=pad;group.userData.itemId=item.id;group.userData.name=item.name;return group}
 function addBuild(item,pos,angle=rotation,persist=true,key=null){const obj=makePlaceable(item,pos,angle),saveKey=key||`build-${Date.now()}-${++buildSerial}`;obj.userData.saveKey=saveKey;buildGroup.add(obj);if(persist){saved.push({key:saveKey,id:item.id,x:pos.x,y:pos.y,z:pos.z,rotation:angle});saveBuilds()}return obj}
 function updateBuildActions(){const button=ui('undoBtn');if(!button)return;button.disabled=saved.length===0;button.title=saved.length?`Undo last placement · ${saved.length} placed (Ctrl+Z)`:'Nothing to undo'}
-function saveBuilds(){try{localStorage.setItem('evergreen-builds',JSON.stringify(saved))}catch{notify('Could not save this build on your device')}updateBuildActions()}
+function saveBuilds(){try{localStorage.setItem('evergreen-builds',JSON.stringify(saved))}catch{notify('Could not save this build on your device')}updateBuildActions();updateTownProgress()}
+const GOAL_TARGET=8,GOAL_CATEGORIES=['Timbers','Stone','Lights','Color'];let townWon=false;
+function updateTownProgress(){
+ const counts=Object.fromEntries(GOAL_CATEGORIES.map(category=>[category,0]));
+ for(const build of saved){const item=catalog.find(entry=>entry.id===build.id);if(item&&counts[item.category]!==undefined)counts[item.category]++}
+ const completed=GOAL_CATEGORIES.reduce((sum,category)=>sum+Math.min(counts[category],GOAL_TARGET),0),total=saved.length;
+ const score=total*25+GOAL_CATEGORIES.reduce((sum,category)=>sum+Math.min(counts[category],GOAL_TARGET)*5,0);
+ const day=1+Math.floor(total/4),mood=Math.min(100,35+Math.round(GOAL_CATEGORIES.reduce((sum,category)=>sum+Math.min(counts[category],GOAL_TARGET),0)*65/(GOAL_TARGET*GOAL_CATEGORIES.length)));
+ ui('dayValue').textContent=day;ui('worldDay').textContent=`Creative world · Day ${String(day).padStart(2,'0')}`;ui('scoreValue').textContent=score.toLocaleString();ui('moodValue').textContent=`${mood}%`;
+ ui('goalProgress').textContent=`${completed}/${GOAL_TARGET*GOAL_CATEGORIES.length}`;ui('goalBar').style.width=`${completed/(GOAL_TARGET*GOAL_CATEGORIES.length)*100}%`;
+ for(const [category,id] of [['Timbers','goalWood'],['Stone','goalStone'],['Lights','goalLights'],['Color','goalColor']]){const value=ui(id);value.textContent=`${Math.min(counts[category],GOAL_TARGET)}/${GOAL_TARGET}`;value.parentElement.classList.toggle('complete',counts[category]>=GOAL_TARGET)}
+ if(completed===GOAL_TARGET*GOAL_CATEGORIES.length&&!townWon){townWon=true;ui('victoryText').textContent=`Your ${total} placements have brought timber, stone, color, and light together. Juniper Bay is now a thriving district.`;ui('victoryModal').classList.add('open')}
+}
 for(const item of saved){const material=catalog.find(i=>i.id===item.id);if(material){item.key||=`build-${++buildSerial}`;addBuild(material,new THREE.Vector3(item.x,item.y,item.z),item.rotation||0,false,item.key)}}
+updateTownProgress();
 function undoBuild(){if(!saved.length){notify('Nothing to undo yet');return}const item=saved.pop(),obj=buildGroup.children.find(child=>child.userData.saveKey===item.key);if(obj)buildGroup.remove(obj);saveBuilds();notify('Last placement undone')}
+function resetTown(){if(saved.length&&!window.confirm('Restart the town plan? This removes all your placed pieces.'))return;for(const child of [...buildGroup.children])if(child.userData.saveKey)buildGroup.remove(child);saved.length=0;townWon=false;ui('victoryModal').classList.remove('open');saveBuilds();notify('Town plan restarted — your world is ready for a fresh start')}
 function removeBuildAt(clientX,clientY){const rect=canvas.getBoundingClientRect(),pointer=new THREE.Vector2((clientX-rect.left)/rect.width*2-1,-((clientY-rect.top)/rect.height)*2+1);buildRay.setFromCamera(pointer,camera);const hit=buildRay.intersectObjects(buildGroup.children.filter(o=>o!==ghost),true)[0];if(!hit)return false;let obj=hit.object;while(obj.parent&&obj.parent!==buildGroup)obj=obj.parent;if(obj===ghost||!obj.userData.saveKey)return false;const index=saved.findIndex(item=>item.key===obj.userData.saveKey);buildGroup.remove(obj);if(index>=0)saved.splice(index,1);saveBuilds();notify('Placed item removed');return true}
 updateBuildActions();
 function makeGhost(){if(ghost){buildGroup.remove(ghost);ghost=null}if(!selected)return;ghost=makePlaceable(selected,new THREE.Vector3(player.position.x,0,player.position.z-4),rotation);ghost.traverse(o=>{if(o.isMesh){o.material=o.material.clone();o.material.transparent=true;o.material.opacity=.4;o.material.depthWrite=false;o.material.emissive=new THREE.Color('#a9d986');o.material.emissiveIntensity=.24;o.castShadow=false;o.receiveShadow=false}});ghost.userData.ghost=true;buildGroup.add(ghost)}
@@ -121,7 +135,7 @@ function toggleInventory(force){inventoryOpen=force??!inventoryOpen;ui('inventor
 ui('inventoryToggle').onclick=()=>toggleInventory();ui('closeInventory').onclick=()=>toggleInventory(false);ui('equipBtn').onclick=()=>{toggleInventory(false);notify(`${selected.name} equipped`)};
 ui('search').addEventListener('input',renderItems);ui('favoritesBtn').onclick=()=>{showFavorites=!showFavorites;ui('favoritesBtn').classList.toggle('active',showFavorites);renderItems()};
 function rotate(){rotation=(rotation+Math.PI/2)%(Math.PI*2);if(ghost)ghost.rotation.y=rotation}
-ui('rotateBtn').onclick=rotate;ui('chipRotate').onclick=rotate;ui('placeBtn').onclick=place;ui('undoBtn').onclick=undoBuild;
+ui('rotateBtn').onclick=rotate;ui('chipRotate').onclick=rotate;ui('placeBtn').onclick=place;ui('undoBtn').onclick=undoBuild;ui('resetProgress').onclick=resetTown;ui('playAgain').onclick=resetTown;
 ui('helpBtn').onclick=()=>ui('helpModal').classList.add('open');ui('closeHelp').onclick=ui('gotIt').onclick=()=>ui('helpModal').classList.remove('open');
 window.addEventListener('keydown',e=>{if(['INPUT','TEXTAREA'].includes(document.activeElement.tagName))return;keys.add(e.code);if(e.code==='KeyB'){toggleInventory();e.preventDefault()}if(e.code==='KeyR')rotate();if((e.ctrlKey||e.metaKey)&&e.code==='KeyZ'){undoBuild();e.preventDefault()}if(e.code==='Escape'){toggleInventory(false);ui('helpModal').classList.remove('open')}});window.addEventListener('keyup',e=>keys.delete(e.code));
 canvas.addEventListener('pointerdown',e=>{if(e.button!==0)return;dragging=true;lastPointer={x:e.clientX,y:e.clientY,moved:false};canvas.setPointerCapture(e.pointerId)});
