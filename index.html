@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#101a1b" />
+  <title>Evergreen — Build the living city</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <script type="importmap">
+    {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js"}}
+  </script>
+</head>
+<body>
+  <main id="game">
+    <canvas id="world"></canvas>
+    <div class="topbar">
+      <div class="brand"><div class="brand-mark">E</div><div><strong>EVERGREEN</strong><small>BUILD THE LIVING CITY</small></div></div>
+      <div class="location"><span class="live-dot"></span><div><b>Juniper Bay</b><small>Creative world · Day 04</small></div></div>
+      <div class="top-actions"><button class="icon-btn" id="soundBtn" aria-label="Toggle ambient sound">♫</button><button class="icon-btn" id="helpBtn" aria-label="How to play">?</button><button class="avatar">A</button></div>
+    </div>
+    <section class="mission-card"><div class="eyebrow">A WORLD OF YOUR OWN</div><h1>Make room<br>for <em>wonder.</em></h1><p>Gather the good things. Shape a place worth staying.</p><div class="world-meta"><span>◉ &nbsp;OPEN WORLD</span><span>✦ &nbsp;NO LIMITS</span></div></section>
+    <div class="world-status"><span class="sun-icon">☀</span><div><b>Golden hour</b><small>18° · clear skies</small></div><i></i><div class="status-coords"><b id="coords">0, 0</b><small>YOUR POSITION</small></div></div>
+    <div class="crosshair"><span></span><span></span></div>
+    <div class="toast" id="toast"></div>
+    <div class="touch-controls" id="touchControls">
+      <div class="stick-zone" id="stickZone"><div class="stick-knob" id="stickKnob"></div></div>
+      <div class="touch-actions"><button id="rotateBtn" class="round-action">↻<small>ROTATE</small></button><button id="placeBtn" class="place-action">＋<small>PLACE</small></button></div>
+    </div>
+    <aside class="inventory" id="inventory">
+      <div class="inventory-head"><div><div class="eyebrow">YOUR WORKSHOP</div><h2>Inventory <span id="itemCount">—</span></h2></div><button id="closeInventory" class="close-btn">×</button></div>
+      <div class="inventory-tools"><label class="search"><span>⌕</span><input id="search" placeholder="Find a material..." autocomplete="off"></label><button class="filter-btn" id="favoritesBtn">☆</button></div>
+      <div class="categories" id="categories"></div>
+      <div class="selection-note"><span class="selection-icon">✦</span><div><b id="selectedName">Choose a material</b><small id="selectedHint">Tap an item to equip it</small></div><button id="equipBtn" class="equip-btn" disabled>SELECT</button></div>
+      <div class="items-grid" id="itemsGrid"></div>
+      <div class="inventory-foot"><span>∞ &nbsp;UNLIMITED SUPPLIES</span><span>Tap a tile to select</span></div>
+    </aside>
+    <button class="inventory-toggle" id="inventoryToggle"><span>▦</span><b>INVENTORY</b><small>ALL MATERIALS</small><kbd>B</kbd></button>
+    <div class="selected-chip" id="selectedChip"><span class="chip-swatch"></span><div><small>READY TO PLACE</small><b id="chipName">Oak wall</b></div><button id="chipRotate">↻</button></div>
+    <div class="controls-hint"><span>WASD</span> MOVE <i></i><span>DRAG</span> LOOK <i></i><span>CLICK</span> PLACE</div>
+    <div class="help-modal" id="helpModal"><div class="help-panel"><button class="close-btn" id="closeHelp">×</button><div class="eyebrow">QUICK START</div><h2>Build your own<br><em>little corner.</em></h2><p>Choose any material from your unlimited inventory, then click or tap the landscape to place it. Walk around with <b>W A S D</b> or the touch pad, and drag the world to look around.</p><div class="help-tip"><span>✦</span><div><b>Little tip</b><small>Use the category filters to find every wood, stone, color, and light. Your builds stay saved on this device.</small></div></div><button class="primary-btn" id="gotIt">LET'S BUILD &nbsp;→</button></div></div>
+    <div class="loading-cover" id="loadingCover"><div class="loader-mark">E</div><div class="loading-title">EVERGREEN</div><div class="loading-sub">A little world is taking shape...</div><div class="loading-bar"><i></i></div></div>
+  </main>
+  <script type="module" src="game.js"></script>
+</body>
+</html>
