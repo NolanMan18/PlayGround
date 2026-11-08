@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#071018" />
+  <title>Blocklight Motorworld</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css" />
+  <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
+</head>
+<body>
+  <main id="game">
+    <canvas id="view"></canvas>
+    <div class="vignette"></div>
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Blocklight Motorworld home"><span class="brand-mark">B<span>✦</span></span><span class="brand-name">BLOCKLIGHT <i>MOTORWORLD</i></span></a>
+      <div class="world-tag"><span class="live-dot"></span> CREATIVE WORLD <b>01</b></div>
+      <button class="icon-btn" id="soundBtn" title="Toggle sound">♫ <span>SOUND OFF</span></button>
+    </header>
+    <section class="intro" id="intro">
+      <div class="eyebrow"><span></span> YOUR WORLD. YOUR RULES.</div>
+      <h1>Build it.<br><em>Drive it.</em></h1>
+      <p>A block-built world with very real horsepower.<br>Pick your ride and own the open road.</p>
+      <button class="start-btn" id="startBtn">ENTER WORLD <span>↗</span></button>
+      <div class="intro-foot"><span>WASD TO MOVE</span><span>✦</span><span>E TO DRIVE</span></div>
+    </section>
+    <aside class="garage-panel" id="garagePanel">
+      <div class="panel-kicker">THE GARAGE <span>07 RIDES</span></div>
+      <div class="car-list" id="carList"></div>
+      <div class="car-detail" id="carDetail"></div>
+      <div class="garage-tip"><kbd>E</kbd><span>ENTER / EXIT SELECTED CAR</span></div>
+    </aside>
+    <div class="hud" id="hud">
+      <div class="hud-left"><span class="hud-icon">▦</span><span id="modeLabel">ON FOOT</span><span class="divider"></span><span id="coords">X 0 · Z 0</span></div>
+      <div class="speed-box" id="speedBox"><strong id="speed">000</strong><small>KM/H</small></div>
+      <div class="hud-right"><span class="led-status"><i></i> LED SPECTRUM</span><button id="ledBtn">CHANGE COLOR <b>R</b></button></div>
+    </div>
+    <div class="crosshair" id="crosshair"><i></i><i></i></div>
+    <div class="interact-prompt" id="prompt"><kbd>E</kbd> <span>ENTER VEHICLE</span></div>
+    <div class="block-hint" id="blockHint"><kbd>CLICK</kbd> BREAK BLOCK <span>·</span> <kbd>SHIFT + CLICK</kbd> PLACE</div>
+    <div class="toast" id="toast"></div>
+    <div class="mobile-controls" id="mobileControls">
+      <div class="dpad"><button data-key="w">▲</button><div><button data-key="a">◀</button><button data-key="s">▼</button><button data-key="d">▶</button></div></div>
+      <button class="mobile-action" id="mobileEnter">E<br><small>DRIVE</small></button>
+    </div>
+    <div class="loading" id="loading"><div class="loader-logo">B<span>✦</span></div><div class="loading-track"><i></i></div><span>GENERATING YOUR WORLD</span></div>
+  </main>
+  <script type="module" src="./game.js"></script>
+</body>
+</html>
